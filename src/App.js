@@ -268,8 +268,8 @@ function App() {
                           </div>
                         ) : 
                         startShow ? (
-                          <div onClick={waitOnclick} className="absolute flex justify-center h-12 font-bold bg-gray-300 border border-gray-400 rounded-md bottom-10 w-80 hover:bg-black hover:text-white">
-                            <input type="submit" value={wait.text} className="w-full cursor-pointer" disabeld={wait.disabeld}/>
+                          <div onClick={waitOnclick} className={`absolute flex justify-center h-12 font-bold bg-gray-300 border border-gray-400 rounded-md bottom-10 w-80 hover:bg-black hover:text-white ${wait.disabeld ? "pointer-events-none" : null}`}>
+                            <input type="submit" value={wait.text} className="w-full cursor-pointer"/>
                           </div>
                       ) : null
                     )}
