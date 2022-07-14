@@ -115,6 +115,7 @@ function App() {
         }
       }, 1000 )
       , []);
+      const [wait, setWait] = useState({text: "START", disabeld: false});
 
       const addRef = useRef();
       const resetStore = ()=>{
@@ -122,6 +123,7 @@ function App() {
         setStore(undefined);
         setStartShow(false);
         setIdErr(true);
+        setWait({text: "START", disabeld: false});
         addRef.current.querySelector("input[type=checkbox]").checked = false;
         setIdText("매장 ID 입력 부탁드립니다.");
         uidRef.current.value = "";
@@ -173,7 +175,7 @@ function App() {
           event.target.submit();
         }
       }
-      const [wait, setWait] = useState({text: "START", disabeld: false});
+      
       const waitOnclick = ()=>{
         setWait({text: "Wait ...", disabeld: true});
       }
@@ -255,10 +257,11 @@ function App() {
                         </>
                       ) : null}
                     </div>
-                    <div className="w-44" ref={addRef}>
-                        <Btn name="add" label={"추가 조사"} value={1} type={"checkbox"} required={false}/>
-                    </div>
                     <Bnumber name="UID" label="UID" min={1} max={99999} dataList={uidList} onChange={showGoToSurvey} thisRef={uidRef}/>
+                    <div className="w-80 flex justify-end" ref={addRef}>
+                        <input type="checkbox" name="add" value="1" id="add" className="hidden peer"/>
+                        <label for="add" className="text-black bg-gray-200 w-24 text-center rounded-md border border-gray-400 shadow-md peer-checked:bg-black peer-checked:text-white transition-colors cursor-pointer">추가 조사</label>
+                    </div>
                     {loading ? (
                       <i className="absolute bottom-10 fa-2x fas fa-circle-notch fa-spin"/>
                       ) : (
