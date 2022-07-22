@@ -1,4 +1,4 @@
-const Bnumber = ({name, label, min, max, onChange, dataList, thisRef}) => {
+const Bnumber = ({name, label, min, max, onChange, dataList, thisRef, onKeyup}) => {
     return (
         <div className="shadow-md relative h-12 w-80">
             <input 
@@ -7,6 +7,7 @@ const Bnumber = ({name, label, min, max, onChange, dataList, thisRef}) => {
             min={min}
             max={max}
             onChange={onChange}
+            onKeyUp={onKeyup}
             ref={thisRef}
             className="w-full h-full border border-gray-300 rounded-md pl-2 peer"
             list={dataList ? "uidlist" : null}

@@ -88,6 +88,41 @@ function App() {
     const [idText, setIdText] = useState("매장 ID 입력 부탁드립니다.");
     const uidRef = useRef();
 
+    const [storeId, setStoreId] = useState("");
+    const [sid, setSid] = useState("");
+
+    const onKeyup = () => {
+      let storeIdSetting = "";
+      let sidSetting = "";
+      if( store === 1 ){ 
+        storeIdSetting = `KR_${uidRef.current.value}`;
+       }
+      if( store === 2 ){ 
+        storeIdSetting = `KR_${uidRef.current.value}P`;
+       }
+      if( store === 3 ){ 
+        storeIdSetting = `KR_${uidRef.current.value}M`;
+       }
+
+       if( [1, 2, 3].includes(store) ){
+        sidSetting = `${storeIdSetting}_${formRef.current.spath.value}`;
+       }
+
+      if( store === 4 ){ 
+        if( csoBrandLabel === "MINI" ){
+          storeIdSetting = `KR_${uidRef.current.value}${csoTypeLabel}CM`
+        }else{
+          storeIdSetting = `KR_${uidRef.current.value}C`
+          if( csoModelLabel === "xEV" ){
+            storeIdSetting = `${storeIdSetting}P`;
+          }
+        }
+        sidSetting = storeIdSetting;
+       }
+       setStoreId(storeIdSetting);
+       setSid(sidSetting);
+    }
+
     const showGoToSurvey = useCallback(
       debounceFuntion( (event) => {
         setLoading(false);
@@ -128,36 +163,10 @@ function App() {
         setIdText("매장 ID 입력 부탁드립니다.");
         uidRef.current.value = "";
       }
-
       const onSubmit = (event) => {
         event.preventDefault();
+
         if( startShow ){
-          if( store === 1 ){ 
-            formRef.current.storeid.value = `KR_${uidRef.current.value}`;
-           }
-          if( store === 2 ){ 
-            formRef.current.storeid.value = `KR_${uidRef.current.value}P`;
-           }
-          if( store === 3 ){ 
-            formRef.current.storeid.value = `KR_${uidRef.current.value}M`;
-           }
-
-           if( [1, 2, 3].includes(store) ){
-            formRef.current.SID.value = `${formRef.current.storeid.value}_${formRef.current.spath.value}`;
-           }
-
-          if( store === 4 ){ 
-            if( csoBrandLabel === "MINI" ){
-              formRef.current.storeid.value = `KR_${uidRef.current.value}${csoTypeLabel}CM`
-            }else{
-              formRef.current.storeid.value = `KR_${uidRef.current.value}C`
-              if( csoModelLabel === "xEV" ){
-                formRef.current.storeid.value = `${formRef.current.storeid.value}P`;
-              }
-            }
-            formRef.current.SID.value = formRef.current.storeid.value;
-           }
-
           const params = new URLSearchParams(window.location.search);
           const pid = params.get("pid");
           const mode = params.get("mode");
@@ -172,6 +181,7 @@ function App() {
           }
           
           event.target.action = actionUrl;
+          setWait({text: "START", disabeld: false});
           event.target.submit();
         }
       }
@@ -191,8 +201,8 @@ function App() {
           <div className="relative w-full">
             <form className="w-full mt-5" ref={formRef} method="GET" onSubmit={onSubmit}>
               <input type="hidden" name="list" value="1" />
-              <input type="hidden" name="SID" value={""} />
-              <input type="hidden" name="storeid" value={""} />
+              <input type="hidden" name="SID" value={sid} />
+              <input type="hidden" name="storeid" value={storeId} />
               <div className="flex flex-col items-center justify-center w-full">
                 <div onClick={storeClick} className="w-80">
                   <Store list={storeList}/>
@@ -257,10 +267,10 @@ function App() {
                         </>
                       ) : null}
                     </div>
-                    <Bnumber name="UID" label="UID" min={1} max={99999} dataList={uidList} onChange={showGoToSurvey} thisRef={uidRef}/>
+                    <Bnumber name="UID" label="UID" min={1} max={99999} dataList={uidList} onChange={showGoToSurvey} onKeyup={onKeyup} thisRef={uidRef}/>
                     <div className="w-80 flex justify-end" ref={addRef}>
                         <input type="checkbox" name="add" value="1" id="add" className="hidden peer"/>
-                        <label for="add" className="text-black bg-gray-200 w-24 text-center rounded-md border border-gray-400 shadow-md peer-checked:bg-black peer-checked:text-white transition-colors cursor-pointer">추가 조사</label>
+                        <label htmlFor="add" className="text-black bg-gray-200 w-24 text-center rounded-md border border-gray-400 shadow-md peer-checked:bg-black peer-checked:text-white transition-colors cursor-pointer">추가 조사</label>
                     </div>
                     {loading ? (
                       <i className="absolute bottom-10 fa-2x fas fa-circle-notch fa-spin"/>
